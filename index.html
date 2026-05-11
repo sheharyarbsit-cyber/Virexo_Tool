@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Virexo — Go Viral Instantly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NOISE OVERLAY -->
+  <div class="noise"></div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <span class="logo-v">V</span>irexo
+      <span class="logo-badge">BETA</span>
+    </div>
+    <div class="nav-links">
+      <a href="#">Dashboard</a>
+      <a href="#">Analytics</a>
+      <a href="#" class="nav-cta">Upgrade</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">AI-POWERED VIRAL ENGINE</div>
+    <h1 class="hero-title">Go<br><em>Viral.</em><br>Everywhere.</h1>
+    <p class="hero-sub">Paste a video link → AI generates captions & hashtags → Post to all platforms in one click.</p>
+    <div class="hero-glow"></div>
+  </section>
+
+  <!-- MAIN APP -->
+  <main class="app-container">
+
+    <!-- STEP 1: VIDEO INPUT -->
+    <div class="card step-card active" id="step1">
+      <div class="step-label">STEP 01</div>
+      <h2>Drop Your Video Link</h2>
+      <p class="step-desc">YouTube, TikTok, Instagram, or direct MP4 link</p>
+
+      <div class="input-group">
+        <div class="input-icon">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <input type="url" id="videoUrl" placeholder="https://youtube.com/watch?v=..." class="url-input"/>
+        <button class="btn-analyze" id="analyzeBtn" onclick="analyzeVideo()">
+          <span class="btn-text">Analyze</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <!-- THUMBNAIL PREVIEW -->
+      <div class="thumbnail-preview" id="thumbnailPreview" style="display:none">
+        <div class="thumb-wrap">
+          <div class="thumb-img" id="thumbImg">
+            <div class="thumb-placeholder">
+              <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <div class="thumb-overlay">
+              <span class="thumb-duration">3:47</span>
+            </div>
+          </div>
+          <div class="thumb-info">
+            <div class="thumb-platform-badge" id="platformBadge">YouTube</div>
+            <p class="thumb-title" id="thumbTitle">Video detected and ready for analysis</p>
+            <p class="thumb-meta" id="thumbMeta">Loading video metadata...</p>
+            <div class="thumb-stats">
+              <span>👁 Estimating reach...</span>
+              <span>🔥 Viral score: calculating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div class="card loading-card" id="loadingCard" style="display:none">
+      <div class="ai-processing">
+        <div class="ai-orb">
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+          <div class="orb-ring r3"></div>
+          <div class="orb-core">AI</div>
+        </div>
+        <h3>Virexo AI is analyzing...</h3>
+        <div class="loading-steps">
+          <div class="ls-item active" id="ls1">🔍 Scanning video content</div>
+          <div class="ls-item" id="ls2">📊 Reading trending data</div>
+          <div class="ls-item" id="ls3">✍️ Crafting viral captions</div>
+          <div class="ls-item" id="ls4">🏷️ Generating hashtags</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: TONE + CAPTIONS -->
+    <div class="card step-card" id="step2" style="display:none">
+      <div class="step-label">STEP 02</div>
+      <h2>Choose Your Vibe</h2>
+      <p class="step-desc">Select a tone — AI adapts captions accordingly</p>
+
+      <div class="tone-selector">
+        <button class="tone-btn active" data-tone="viral" onclick="selectTone(this)">
+          <span class="tone-icon">🔥</span>
+          <span class="tone-name">Viral</span>
+          <span class="tone-desc">Max engagement</span>
+        </button>
+        <button class="tone-btn" data-tone="funny" onclick="selectTone(this)">
+          <span class="tone-icon">😂</span>
+          <span class="tone-name">Funny</span>
+          <span class="tone-desc">Humor & memes</span>
+        </button>
+        <button class="tone-btn" data-tone="serious" onclick="selectTone(this)">
+          <span class="tone-icon">🎯</span>
+          <span class="tone-name">Serious</span>
+          <span class="tone-desc">Pro & polished</span>
+        </button>
+        <button class="tone-btn" data-tone="clickbait" onclick="selectTone(this)">
+          <span class="tone-icon">⚡</span>
+          <span class="tone-name">Clickbait</span>
+          <span class="tone-desc">Shock & awe</span>
+        </button>
+      </div>
+
+      <!-- AI CAPTIONS OUTPUT -->
+      <div class="captions-section" id="captionsSection">
+        <div class="captions-header">
+          <h3>AI-Generated Captions</h3>
+          <button class="btn-regenerate" onclick="regenerateCaptions()">↻ Regenerate</button>
+        </div>
+        <div class="captions-list" id="captionsList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- HASHTAGS -->
+      <div class="hashtags-section">
+        <div class="hashtags-header">
+          <h3>Trending Hashtags</h3>
+          <span class="hashtag-count" id="hashtagCount">0 tags</span>
+        </div>
+        <div class="hashtags-wrap" id="hashtagsWrap">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <button class="btn-next" onclick="goToStep3()">
+        Select Platforms <span>→</span>
+      </button>
+    </div>
+
+    <!-- STEP 3: PLATFORM + ACCOUNTS -->
+    <div class="card step-card" id="step3" style="display:none">
+      <div class="step-label">STEP 03</div>
+      <h2>Select Platforms & Accounts</h2>
+      <p class="step-desc">One click — posts to all selected accounts simultaneously</p>
+
+      <div class="platforms-grid" id="platformsGrid">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- CONNECTED ACCOUNTS -->
+      <div class="accounts-section" id="accountsSection">
+        <h3>Connected Accounts</h3>
+        <div class="accounts-list" id="accountsList"></div>
+        <button class="btn-add-account" onclick="showAddAccount()">+ Connect New Account</button>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div class="schedule-section">
+        <div class="schedule-header">
+          <div>
+            <h3>Schedule Post</h3>
+            <p>Set a future time or post immediately</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="scheduleToggle" onchange="toggleSchedule()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="schedule-inputs" id="scheduleInputs" style="display:none">
+          <input type="date" id="schedDate" class="schedule-input">
+          <input type="time" id="schedTime" class="schedule-input" value="09:00">
+          <div class="best-times">
+            <span class="best-label">🎯 Best times:</span>
+            <button class="best-time-btn" onclick="setQuickTime('09:00')">9 AM</button>
+            <button class="best-time-btn" onclick="setQuickTime('12:00')">12 PM</button>
+            <button class="best-time-btn" onclick="setQuickTime('18:00')">6 PM</button>
+            <button class="best-time-btn" onclick="setQuickTime('21:00')">9 PM</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-publish" id="publishBtn" onclick="publishNow()">
+        <span class="publish-icon">🚀</span>
+        <span id="publishBtnText">Post to All Selected</span>
+      </button>
+    </div>
+
+    <!-- STEP 4: SUCCESS -->
+    <div class="card step-card success-card" id="step4" style="display:none">
+      <div class="success-anim">
+        <div class="success-ring">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="36" stroke="#00ff88" stroke-width="3" fill="none" stroke-dasharray="226" stroke-dashoffset="226" class="success-circle"/>
+            <polyline points="24,42 35,53 56,30" stroke="#00ff88" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" class="success-check"/>
+          </svg>
+        </div>
+        <h2>Posted! 🎉</h2>
+        <p>Your content is now live across <span id="postedCount">0</span> platforms</p>
+      </div>
+
+      <div class="posted-platforms" id="postedPlatforms"></div>
+
+      <div class="post-stats">
+        <div class="stat-box">
+          <div class="stat-num" id="statReach">0</div>
+          <div class="stat-label">Est. Reach</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statAccounts">0</div>
+          <div class="stat-label">Accounts Posted</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statScore">🔥</div>
+          <div class="stat-label">Viral Score</div>
+        </div>
+      </div>
+
+      <button class="btn-next" onclick="resetAll()">Post Another Video →</button>
+    </div>
+
+  </main>
+
+  <!-- ADD ACCOUNT MODAL -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Connect Account</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-platforms">
+        <button class="modal-platform-btn" onclick="connectAccount('YouTube')">
+          <span class="mp-icon yt">▶</span> YouTube
+        </button>
+        <button class="modal-platform-btn" onclick="connectAccount('TikTok')">
+          <span class="mp-icon tt">♪</span> TikTok
+        </button>
+        <button class="modal-platform-btn" onclick="connectAccount('Instagram')">
+          <span class="mp-icon ig">◎</span> Instagram
+        </button>
+        <button class="modal-platform-btn" onclick="connectAccount('Facebook')">
+          <span class="mp-icon fb">f</span> Facebook
+        </button>
+        <button class="modal-platform-btn" onclick="connectAccount('Twitter/X')">
+          <span class="mp-icon tw">𝕏</span> Twitter/X
+        </button>
+        <button class="modal-platform-btn" onclick="connectAccount('LinkedIn')">
+          <span class="mp-icon li">in</span> LinkedIn
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
